@@ -1,31 +1,136 @@
-# Change these first
-owner: upptime # Your GitHub organization or username, where this repository lives
-repo: upptime # The name of this repository
+# Upptime — external uptime monitor for msg life Slovakia
+# Runs on GitHub Actions (outside brain-prod), so it still alerts when the whole
+# server, PM2 or the in-server ns-watchdog is down.
+# PUBLIC REPO: never put internal hosts, IPs, logs or credentials here or in
+# incident issue comments.
+# Docs: https://upptime.js.org/docs/configuration
+owner: msg-life-slovakia
+repo: status
+user-agent: msg-life-slovakia-upptime
+
+# Strict allowlist — only this secret reaches the checks. It unlocks the full
+# /health body (brain-api HEALTH_TOKEN); anonymous callers get {status, timestamp}.
+# GitHub masks it in logs and Upptime never commits headers or response bodies.
+# Alerts go via GitHub issues (assignee email); add NOTIFICATION_* here if
+# email/Teams is added later.
+secrets:
+  - BRAIN_HEALTH_TOKEN
+
+# Every downtime opens a GitHub issue; assignees get GitHub's own notification
+# email — independent of Resend and of brain-prod.
+assignees:
+  - ai-msg-sk
 
 sites:
-  - name: Google
-    url: https://www.google.com
-  - name: Wikipedia
-    url: https://en.wikipedia.org
-  - name: Hacker News
-    url: https://news.ycombinator.com
-  - name: Secret Site
-    url: $SECRET_SITE
+  # ── Team Brain (brain.msgweb.io) ─────────────────────────────────────
+  # Public view: anonymous callers get only {"status":"ok|degraded","timestamp"}.
+  - name: Brain API
+    slug: brain-api
+    url: https://brain.msgweb.io/api/health
+    maxResponseTime: 3000
+    __dangerous__body_down_if_text_missing: '"timestamp"'
+    __dangerous__body_degraded_if_text_missing: '"status":"ok"'
+
+  # Detail view (token): nginx → Express → Postgres must all answer.
+  - name: Brain databáza
+    slug: brain-db
+    url: https://brain.msgweb.io/api/health
+    headers:
+      - "X-Health-Token: $BRAIN_HEALTH_TOKEN"
+    __dangerous__body_down_if_text_missing: '"database":{"status":"connected"}'
+
+  # GSC / GA4 / Rank Tracker snapshot pipelines. Only integration entries can
+  # contain "down" (top-level status is ok|degraded), so this never false-fires.
+  - name: Brain integrácie (GSC, GA4, Rank Tracker)
+    slug: brain-integrations
+    url: https://brain.msgweb.io/api/health
+    headers:
+      - "X-Health-Token: $BRAIN_HEALTH_TOKEN"
+    __dangerous__body_down_if_text_missing: '"integrations"'
+    __dangerous__body_degraded: '"status":"down"'
+
+  # Static Next.js export served by nginx. NOTE: /health (without /api) is the
+  # SPA shell and always returns 200 — never probe it.
+  - name: Brain chat (frontend)
+    slug: brain-frontend
+    url: https://brain.msgweb.io/
+    maxResponseTime: 3000
+    __dangerous__body_down_if_text_missing: '</html>'
+
+  # External API — no key, so 401 + invalid_api_key proves nginx /api strip,
+  # Express routing and the API-key middleware are alive.
+  - name: Brain external API v1
+    slug: brain-api-v1
+    url: https://brain.msgweb.io/api/v1/data
+    expectedStatusCodes:
+      - 401
+    __dangerous__body_down_if_text_missing: 'invalid_api_key'
+
+  - name: Brain MCP endpoint
+    slug: brain-mcp
+    url: https://brain.msgweb.io/api/v1/mcp
+    expectedStatusCodes:
+      - 401
+    __dangerous__body_down_if_text_missing: 'invalid_api_key'
+
+  # ── Public websites (WordPress behind Cloudflare) ────────────────────
+  - name: msg-life.sk
+    url: https://msg-life.sk/
+    maxResponseTime: 5000
+    __dangerous__body_down: 'Error establishing a database connection'
+    __dangerous__body_degraded: 'There has been a critical error on this website'
+  - name: msgprogramator.sk
+    url: https://msgprogramator.sk/
+    maxResponseTime: 5000
+    __dangerous__body_down: 'Error establishing a database connection'
+    __dangerous__body_degraded: 'There has been a critical error on this website'
+  - name: msgtester.sk
+    url: https://msgtester.sk/
+    maxResponseTime: 5000
+    __dangerous__body_down: 'Error establishing a database connection'
+    __dangerous__body_degraded: 'There has been a critical error on this website'
+  - name: ittester.sk
+    url: https://ittester.sk/
+    maxResponseTime: 5000
+    __dangerous__body_down: 'Error establishing a database connection'
+    __dangerous__body_degraded: 'There has been a critical error on this website'
+
+  # Sitemaps — SEO-critical; a broken AIOSEO sitemap silently hurts indexing.
+  - name: msg-life.sk sitemap
+    slug: msg-life-sitemap
+    url: https://msg-life.sk/sitemap.xml
+    __dangerous__body_down_if_text_missing: '<?xml'
+  - name: msgprogramator.sk sitemap
+    slug: msgprogramator-sitemap
+    url: https://msgprogramator.sk/sitemap.xml
+    __dangerous__body_down_if_text_missing: '<?xml'
+  - name: msgtester.sk sitemap
+    slug: msgtester-sitemap
+    url: https://msgtester.sk/sitemap.xml
+    __dangerous__body_down_if_text_missing: '<?xml'
+  - name: ittester.sk sitemap
+    slug: ittester-sitemap
+    url: https://ittester.sk/sitemap.xml
+    __dangerous__body_down_if_text_missing: '<?xml'
 
 status-website:
-  # Add your custom domain name, or remove the `cname` line if you don't have a domain
-  # Uncomment the `baseUrl` line if you don't have a custom domain and add your repo name there
-  cname: demo.upptime.js.org
-  # baseUrl: /your-repo-name
-  logoUrl: https://raw.githubusercontent.com/upptime/upptime.js.org/master/static/img/icon.svg
-  name: Upptime
-  introTitle: "**Upptime** is the open-source uptime monitor and status page, powered entirely by GitHub."
-  introMessage: This is a sample status page which uses **real-time** data from our [GitHub repository](https://github.com/upptime/upptime). No server required — just GitHub Actions, Issues, and Pages. [**Get your own for free**](https://github.com/upptime/upptime)
+  cname: status.msgweb.io
+  name: msg life Slovakia — status
+  introTitle: "Stav služieb msg life Slovakia"
+  introMessage: Team Brain a firemné weby, kontrolované každých 5 minút zvonka (GitHub Actions).
   navbar:
-    - title: Status
+    - title: Stav
       href: /
     - title: GitHub
       href: https://github.com/$OWNER/$REPO
 
-# Upptime also supports notifications, assigning issues, and more
-# See https://upptime.js.org/docs/configuration
+i18n:
+  up: V prevádzke
+  down: Nedostupné
+  degraded: Zhoršené
+  allSystemsOperational: Všetky služby bežia
+  activeIncidents: Aktívne incidenty
+  pastIncidents: Minulé incidenty
+  liveStatus: Aktuálny stav
+  overallUptime: "Celková dostupnosť: $UPTIME"
+  averageResponseTime: "Priemerná odozva: $TIMEms"
