@@ -4,19 +4,19 @@
     "url": "https://brain.msgweb.io/api/health",
     "icon": "https://icons.duckduckgo.com/ip3/brain.msgweb.io.ico",
     "slug": "brain-api",
-    "status": "degraded",
-    "uptime": "100.00%",
-    "uptimeDay": "99.98%",
-    "uptimeWeek": "100.00%",
-    "uptimeMonth": "100.00%",
-    "uptimeYear": "100.00%",
-    "time": 2866,
-    "timeDay": 10544,
-    "timeWeek": 5643,
-    "timeMonth": 2866,
-    "timeYear": 2866,
+    "status": "up",
+    "uptime": "99.97%",
+    "uptimeDay": "99.43%",
+    "uptimeWeek": "99.92%",
+    "uptimeMonth": "99.97%",
+    "uptimeYear": "99.97%",
+    "time": 2793,
+    "timeDay": 9141,
+    "timeWeek": 5265,
+    "timeMonth": 2793,
+    "timeYear": 2793,
     "dailyMinutesDown": {
-      "2026-11-03": 0
+      "2026-11-03": 8
     }
   },
   {
