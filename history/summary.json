@@ -4,19 +4,19 @@
     "url": "https://brain.msgweb.io/api/health",
     "icon": "https://icons.duckduckgo.com/ip3/brain.msgweb.io.ico",
     "slug": "brain-api",
-    "status": "up",
-    "uptime": "99.97%",
-    "uptimeDay": "99.41%",
-    "uptimeWeek": "99.92%",
-    "uptimeMonth": "99.97%",
-    "uptimeYear": "99.97%",
-    "time": 2311,
-    "timeDay": 9081,
-    "timeWeek": 4533,
-    "timeMonth": 2311,
-    "timeYear": 2311,
+    "status": "degraded",
+    "uptime": "100.00%",
+    "uptimeDay": "99.98%",
+    "uptimeWeek": "100.00%",
+    "uptimeMonth": "100.00%",
+    "uptimeYear": "100.00%",
+    "time": 2866,
+    "timeDay": 10544,
+    "timeWeek": 5643,
+    "timeMonth": 2866,
+    "timeYear": 2866,
     "dailyMinutesDown": {
-      "2026-11-03": 8
+      "2026-11-03": 0
     }
   },
   {
@@ -60,19 +60,19 @@
     "url": "https://brain.msgweb.io/",
     "icon": "https://icons.duckduckgo.com/ip3/brain.msgweb.io.ico",
     "slug": "brain-frontend",
-    "status": "degraded",
-    "uptime": "99.96%",
-    "uptimeDay": "99.15%",
-    "uptimeWeek": "99.88%",
-    "uptimeMonth": "99.96%",
-    "uptimeYear": "99.96%",
-    "time": 1882,
-    "timeDay": 9934,
-    "timeWeek": 4254,
-    "timeMonth": 1882,
-    "timeYear": 1882,
+    "status": "up",
+    "uptime": "99.94%",
+    "uptimeDay": "98.61%",
+    "uptimeWeek": "99.80%",
+    "uptimeMonth": "99.94%",
+    "uptimeYear": "99.94%",
+    "time": 1819,
+    "timeDay": 7984,
+    "timeWeek": 3884,
+    "timeMonth": 1819,
+    "timeYear": 1819,
     "dailyMinutesDown": {
-      "2026-11-03": 12
+      "2026-11-03": 20
     }
   },
   {
